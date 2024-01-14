@@ -17,8 +17,35 @@ app.use(helmet.xssFilter())
 app.use(helmet.noSniff())
 app.use(helmet.ieNoOpen())
 app.use(helmet.hsts({maxAge: ninetyDaysInSeconds}));
+app.use(helmet.dnsPrefetchControl());
+app.use(helmet.noCache());
+app.use(helmet.contentSecurityPolicy(
+  {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: [
+        "'self'",
+        'trusted-cdn.com'
+      ]
+  }
+}));
 
-
+//We introduced each middleware separately
+//  for teaching purposes and for ease 
+//  of testing. Using the ‘parent’ helmet()
+// //   middleware is easy to implement in a real project.
+// app.use(helmet({
+//   frameguard: {         // configure
+//     action: 'deny'
+//   },
+//   contentSecurityPolicy: {    // enable and configure
+//     directives: {
+//       defaultSrc: ["'self'"],
+//       styleSrc: ['style.com'],
+//     }
+//   },
+//   dnsPrefetchControl: false     // disable
+// }))
 
 
 
